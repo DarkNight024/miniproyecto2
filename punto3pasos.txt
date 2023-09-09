@@ -1,0 +1,15 @@
+kubectl create deployment otro-bootcamp --image=docker.io/jocatalin/kubernetes-bootcamp:v1 --port=8080 --context=proyecto
+
+kubectl expose deployment/otro-bootcamp --type="LoadBalancer" --port 8080
+
+export EXTERNAL_IP=$(kubectl get service otro-bootcamp --output=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+export PORT=$(kubectl get services --output=jsonpath='{.items[0].spec.ports[0].port}')
+
+curl "$EXTERNAL_IP:$PORT"
+
+kubectl scale deployments/otro-bootcamp --replicas=4
+
+kubectl set image deployment/otro-bootcamp kubernetes-bootcamp=sebastiangnw/kubernetes-bootcamp:v2
+
+curl 20.62.137.3:8080
